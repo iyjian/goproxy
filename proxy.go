@@ -31,7 +31,7 @@ import (
 
 	"github.com/viki-org/dnscache"
 
-	"github.com/ouqiang/goproxy/cert"
+	"github.com/iyjian/goproxy/cert"
 	"github.com/ouqiang/websocket"
 )
 
