@@ -202,6 +202,14 @@ func WithEnableWebsocketIntercept() Option {
 	}
 }
 
+func WithDelegatetHTTPS(c cert.Cache, delegate Delegate) Option {
+	return func(opt *options) {
+		opt.decryptHTTPS = true
+		opt.certCache = c
+		opt.delegate = delegate
+	}
+}
+
 // New 创建proxy实例
 func New(opt ...Option) *Proxy {
 	opts := &options{}
@@ -463,7 +471,7 @@ func (p *Proxy) tunnelProxy(ctx *Context, rw http.ResponseWriter) {
 	targetConn, err := net.DialTimeout("tcp", targetAddr, defaultTargetConnectTimeout)
 	if err != nil {
 		p.tunnelConnected(ctx, err)
-		p.delegate.ErrorLog(fmt.Errorf("%s - 隧道转发连接目标服务器失败: %s", ctx.Req.URL.Host, err))
+		p.delegate.ErrorLog(fmt.Errorf("%s - 隧道转发连接目标服务器失败: %s targetAddr: %s", ctx.Req.URL.Host, err, targetAddr))
 		return
 	}
 	defer func() {
